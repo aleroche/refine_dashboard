@@ -6,7 +6,7 @@ import {
   TextField,
 } from "@refinedev/antd";
 import { IResourceComponentsProps, useShow } from "@refinedev/core";
-import { Typography } from "antd";
+import { Card, Typography } from "antd";
 import React from "react";
 import { POST_SHOW_QUERY } from "./queries";
 
@@ -36,6 +36,7 @@ export const BlogPostShow: React.FC<IResourceComponentsProps> = () => {
       <TextField value={record?.status} />
       <Title level={5}>{"CreatedAt"}</Title>
       <DateField value={record?.createdAt} />
+    
     </Show>
   );
 };
