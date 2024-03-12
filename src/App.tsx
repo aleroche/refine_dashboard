@@ -21,22 +21,8 @@ import { App as AntdApp } from "antd";
 import { createClient } from "graphql-ws";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 
-import {
-  BlogPostCreate,
-  BlogPostEdit,
-  BlogPostList,
-  BlogPostShow,
-} from "./pages/blog-posts";
-import {
-  CategoryCreate,
-  CategoryEdit,
-  CategoryList,
-  CategoryShow,
-} from "./pages/categories";
-import { ForgotPassword } from "./pages/forgotPassword";
-import { Login } from "./pages/login";
-import { Register } from "./pages/register";
-
+import { Home, ForgotPassword, Login, Register } from './pages'
+import Layout from "./components/layout";
 
 function App() {
   return (
@@ -52,28 +38,28 @@ function App() {
               notificationProvider={useNotificationProvider}
               routerProvider={routerBindings}
               authProvider={authProvider}
-              resources={[
-                {
-                  name: "blog_posts",
-                  list: "/blog-posts",
-                  create: "/blog-posts/create",
-                  edit: "/blog-posts/edit/:id",
-                  show: "/blog-posts/show/:id",
-                  meta: {
-                    canDelete: true,
-                  },
-                },
-                {
-                  name: "categories",
-                  list: "/categories",
-                  create: "/categories/create",
-                  edit: "/categories/edit/:id",
-                  show: "/categories/show/:id",
-                  meta: {
-                    canDelete: true,
-                  },
-                },
-              ]}
+              // resources={[
+              //   {
+              //     name: "blog_posts",
+              //     list: "/blog-posts",
+              //     create: "/blog-posts/create",
+              //     edit: "/blog-posts/edit/:id",
+              //     show: "/blog-posts/show/:id",
+              //     meta: {
+              //       canDelete: true,
+              //     },
+              //   },
+              //   {
+              //     name: "categories",
+              //     list: "/categories",
+              //     create: "/categories/create",
+              //     edit: "/categories/edit/:id",
+              //     show: "/categories/show/:id",
+              //     meta: {
+              //       canDelete: true,
+              //     },
+              //   },
+              // ]}
               options={{
                 syncWithLocation: true,
                 warnWhenUnsavedChanges: true,
@@ -83,7 +69,26 @@ function App() {
               }}
             >
               <Routes>
-                <Route
+
+                <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+
+                <Route element={
+                  <Authenticated
+                    key="authenticated-layout"
+                    fallback={<CatchAllNavigate to="/login" />}
+                  >
+                    <Layout>
+                      <Outlet />
+                    </Layout>
+                  </Authenticated>
+                } >
+                  <Route index element={<Home />} />
+
+                </Route>
+
+                {/* <Route
                   element={
                     <Authenticated
                       key="authenticated-inner"
@@ -132,7 +137,7 @@ function App() {
                     path="/forgot-password"
                     element={<ForgotPassword />}
                   />
-                </Route>
+                </Route> */}
               </Routes>
 
               <RefineKbar />
