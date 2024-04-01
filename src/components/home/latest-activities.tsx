@@ -98,7 +98,7 @@ const DashboardLatestActivities = () => {
                                                 <Text strong>{item.user?.name}</Text>
                                                 <Text>{item.action === 'CREATE' ? 'create' : 'move'}</Text>
                                                 <Text strong>{deal?.title}</Text>
-                                                <Text strong>deal</Text>
+                                                <Text>deal</Text>
                                                 <Text strong>{item.action === 'CREATE' ? 'in' : 'to'}</Text>
                                                 <Text strong>{deal?.stage?.title}</Text>
                                             </Space>
