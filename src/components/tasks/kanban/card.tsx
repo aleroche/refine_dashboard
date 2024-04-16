@@ -1,30 +1,33 @@
 import CustomAvatar from '@/components/custom-avatar';
 import { Text } from '@/components/text';
 import { TextIcon } from '@/components/text-icon';
+import { resources } from '@/config/resources';
 import { User } from '@/graphql/schema.types';
 import { getDateColor } from '@/utilities';
 import { ClockCircleOutlined, DeleteOutlined, EyeOutlined, MoreOutlined } from '@ant-design/icons';
+import { useDelete, useNavigation } from '@refinedev/core';
 import { Button, Card, ConfigProvider, Dropdown, MenuProps, Space, Tag, Tooltip, theme } from 'antd';
 import dayjs from 'dayjs';
 import { memo, useMemo } from 'react'
 import { text } from 'stream/consumers';
 
 type ProjectCardProps = {
-  id: string,
-  title: string,
-  updatedAt: string,
-  dueDate?: string,
-  users?: {
     id: string,
-    name: string,
-    avatarUrl?: User['avatarUrl']
-  }[]
+    title: string,
+    updatedAt: string,
+    dueDate?: string,
+    users?: {
+        id: string,
+        name: string,
+        avatarUrl?: User['avatarUrl']
+    }[]
 }
 const ProjectCard = ({ id, title, dueDate, users }: ProjectCardProps) => {
 
     const { token } = theme.useToken()
 
-    const edit = () => { }
+    const { edit } = useNavigation()
+    const { mutate } = useDelete()
 
     const dropdownItems = useMemo(() => {
         const dropdownItems: MenuProps['items'] = [
@@ -32,14 +35,22 @@ const ProjectCard = ({ id, title, dueDate, users }: ProjectCardProps) => {
                 label: 'View Card',
                 key: 1,
                 icon: <EyeOutlined />,
-                onClick: () => { edit() }
+                onClick: () => { edit('tasks', id, 'replace') }
             },
             {
                 danger: true,
                 label: 'Delete Card',
                 key: 2,
                 icon: <DeleteOutlined />,
-                onClick: () => { }
+                onClick: () => {
+                    mutate({
+                        resource: 'tasks',
+                        id,
+                        meta: {
+                            operation: 'task'
+                        }
+                    })
+                }
             },
         ]
         return dropdownItems
@@ -70,7 +81,7 @@ const ProjectCard = ({ id, title, dueDate, users }: ProjectCardProps) => {
             <Card
                 size='small'
                 title={<Text ellipsis={{ tooltip: title }}>{title}</Text>}
-                onClick={() => { edit() }}
+                onClick={() => { edit('tasks', id, 'replace') }}
                 extra={
                     <Dropdown
                         trigger={['click']}

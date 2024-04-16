@@ -9,11 +9,13 @@ import { TASKS_QUERY, TASK_STAGES_QUERY } from '@/graphql/queries'
 import { TaskStage } from '@/graphql/schema.types'
 import { TasksQuery } from '@/graphql/types'
 import { DragEndEvent } from '@dnd-kit/core'
-import { useList, useUpdate } from '@refinedev/core'
+import { useList, useNavigation, useUpdate } from '@refinedev/core'
 import { GetFieldsFromList } from '@refinedev/nestjs-query'
 import React, { useEffect } from 'react'
 
-const TaskList = () => {
+const TaskList = ({ children }: React.PropsWithChildren) => {
+
+    const { replace } = useNavigation()
 
     const { data: stages, isLoading: isLoadingStages } = useList<TaskStage>({
         resource: 'taskStages',
@@ -73,7 +75,11 @@ const TaskList = () => {
     const { mutate: updateTask } = useUpdate()
 
     const handleAddCard = (args: { stageId: string }) => {
+        const path = args.stageId === 'unnasigned'
+            ? '/tasks/new'
+            : `/tasks/new?stageId=${args.stageId}`
 
+        replace(path)
     }
 
     const handleOnDragEnd = (event: DragEndEvent) => {
@@ -173,7 +179,7 @@ const TaskList = () => {
 
                 </KanbanBoard>
             </KanbanBoardContainer>
-
+            {children}
         </>
     )
 }
